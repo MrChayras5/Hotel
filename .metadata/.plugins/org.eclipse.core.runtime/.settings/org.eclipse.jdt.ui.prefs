@@ -1,0 +1,12 @@
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="jakarta.persistence.GenerationType"/><rhs name\="jakarta.persistence.EnumType"/><rhs name\="com.habitacion.enums.EstadoHabitacion"/></lhs><lhs name\="java.lang.constant.Constable"><rhs name\="jakarta.persistence.GenerationType"/><rhs name\="jakarta.persistence.EnumType"/><rhs name\="com.habitacion.enums.EstadoHabitacion"/></lhs><lhs name\="com.habitacion.entity.Habitacion"><rhs name\="com.habitacion.entity.Habitacion"/></lhs><lhs name\="java.lang.Record"><rhs name\="com.reservas_commons.dto.HabitacionResponse"/><rhs name\="com.reservas_commons.dto.HuespedRequest"/><rhs name\="com.reservas_commons.dto.HuespedResponse"/><rhs name\="com.reservas_commons.dto.ReservaResponse"/></lhs><lhs name\="com.reservas_commons.dto.HabitacionResponse"><rhs name\="com.reservas_commons.dto.HabitacionResponse"/></lhs><lhs name\="com.habitacion.enums.EstadoHabitacion"><rhs name\="com.habitacion.enums.EstadoHabitacion"/></lhs><lhs name\="com.reservas_commons.service.CrudService"><rhs name\="com.habitacion.service.HabitacionServiceImp"/></lhs><lhs name\="com.reservas_commons.dto.HuespedRequest"><rhs name\="com.reservas_commons.dto.HuespedRequest"/></lhs><lhs name\="com.huesped.entity.Huesped"><rhs name\="com.huesped.entity.Huesped"/></lhs><lhs name\="com.reservas_commons.dto.HuespedResponse"><rhs name\="com.reservas_commons.dto.HuespedResponse"/></lhs><lhs name\="com.reservas_commons.dto.ReservaResponse"><rhs name\="com.reservas_commons.dto.ReservaResponse"/></lhs><lhs name\="com.reserva.entity.Reserva"><rhs name\="com.reserva.entity.Reserva"/></lhs></history>
+content_assist_number_of_computers=14
+content_assist_proposals_background=255,255,255
+content_assist_proposals_foreground=0,0,0
+eclipse.preferences.version=1
+org.eclipse.jdt.internal.ui.navigator.layout=2
+org.eclipse.jdt.internal.ui.navigator.librariesnode=true
+org.eclipse.jdt.ui.formatterprofiles.version=23
+spelling_locale_initialized=true
+typefilter_migrated_2=true
+useAnnotationsPrefPage=true
+useQuickDiffPrefPage=true

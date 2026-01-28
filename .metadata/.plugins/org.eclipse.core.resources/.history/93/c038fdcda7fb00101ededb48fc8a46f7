@@ -1,0 +1,44 @@
+package com.habitacion.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.reservas_commons.dto.HabitacionRequest;
+import com.reservas_commons.dto.HabitacionResponse;
+import com.reservas_commons.service.CrudService;
+
+@Service
+public class HabitacionServiceImp implements HabitacionService{
+
+	@Override
+	public List<HabitacionResponse> listar() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HabitacionResponse obtenerPorId(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HabitacionResponse registrar(HabitacionRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HabitacionResponse actualizar(HabitacionRequest request, Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void eliminar(Long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

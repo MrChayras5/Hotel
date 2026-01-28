@@ -1,0 +1,5 @@
+package com.huesped.repository;
+
+public interface HuespedRepository {
+
+}

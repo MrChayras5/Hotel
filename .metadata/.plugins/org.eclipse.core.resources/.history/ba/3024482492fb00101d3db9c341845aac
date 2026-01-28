@@ -1,0 +1,5 @@
+package com.habitacion.entity;
+
+public class Habitacion {
+
+}

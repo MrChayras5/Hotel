@@ -1,0 +1,46 @@
+spring:
+  application:
+    name:  api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+
+  cloud:
+    loadbalancer:
+      enabled: true
+
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: msv-habitaciones
+              uri: lb://msv-habitaciones
+              predicates:
+                - Path=/api/habitaciones/**
+              filters:
+                - StripPrefix=2
+
+            - id: msv-huesped
+              uri: lb://msv-huesped
+              predicates:
+                - Path=/api/huesped/**
+              filters:
+                - StripPrefix=2
+
+            - id: msv-reserva
+              uri: lb://msv-reserva
+              predicates:
+                - Path=/api/msv-reserva/**
+              filters:
+                - StripPrefix=2
+
+server:
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

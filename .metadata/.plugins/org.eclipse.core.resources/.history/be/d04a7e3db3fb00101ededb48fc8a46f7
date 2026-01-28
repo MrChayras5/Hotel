@@ -1,0 +1,38 @@
+package com.reservas_commons.dto;
+
+import java.math.BigDecimal;
+
+import com.habitacion.enums.EstadoHabitacion;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+public record HabitacionRequest (
+		
+		@NotNull(message = "El número de habitación es obligatorio")
+		@Positive(message = "El número de habitación debe ser positivo")
+		Integer numero,
+		
+		@NotBlank(message = "El tipo de habitación es obligatorio")
+		@Size(max = 20, message = "El tipo no puede exceder 20 caracteres")
+		String tipo,
+		
+		@Size(max = 255, message = "La descripción no puede exceder 255 caracteres")
+		String descripcion,
+		
+		@NotNull(message = "El precio es obligatorio")
+		@Positive(message = "El precio debe ser mayor a 0")
+		BigDecimal precio,
+		
+		@NotNull(message = "La capacidad es obligatoria")
+		@Positive(message = "La capacidad debe ser mayor a 0")
+		Integer capacidad,
+		
+		@NotBlank(message = "El estado es obligatorio")
+		@Size(max = 20, message = "El estado no puede exceder 20 caracteres")
+		EstadoHabitacion estado
+		) {
+
+}

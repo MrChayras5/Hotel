@@ -1,0 +1,20 @@
+package com.habitacion.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.habitacion.service.HabitacionService;
+import com.reservas_commons.controllers.CommonsController;
+import com.reservas_commons.dto.HabitacionRequest;
+import com.reservas_commons.dto.HabitacionResponse;
+
+
+@RestController
+@RequestMapping("/api/habitacion")
+public class HabitacionController extends CommonsController<HabitacionRequest, HabitacionResponse, HabitacionService>{
+
+	public HabitacionController(HabitacionService service) {
+		super(service);
+		// TODO Auto-generated constructor stub
+	}
+}

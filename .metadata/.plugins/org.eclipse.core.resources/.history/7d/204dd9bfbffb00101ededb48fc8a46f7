@@ -1,0 +1,45 @@
+package com.reservas_commons.dto;
+
+import java.math.BigDecimal;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+public record HuespedRequest(
+		
+		@NotNull(message = "El número de habitación es obligatorio")
+		@Positive(message = "El número del id Huesped debe ser positivo")
+		Long idHuesped,
+		
+		@NotBlank(message = "El nombre es  obligatorio")
+		@Size(max = 20, message = "El nombre no puede exceder 50 caracteres")
+		String nombre,
+		
+		@NotBlank(message = "El apellido es  obligatorio")
+		@Size(max = 20, message = "El apellido no puede exceder 50 caracteres")
+		String apellido,
+
+		@NotBlank(message = "El email es  obligatorio")
+		@Email(message = "El email debe de ser valido")
+		@Size(max = 20, message = "El email no puede exceder 100 caracteres")
+		String email,
+
+		
+		@Size(max = 255, message = "La descripción no puede exceder 255 caracteres")
+		String descripcion,
+		
+		@NotNull(message = "El precio es obligatorio")
+		@Positive(message = "El precio debe ser mayor a 0")
+		BigDecimal precio,
+		
+		@NotNull(message = "La capacidad es obligatoria")
+		@Positive(message = "La capacidad debe ser mayor a 0")
+		Integer capacidad,
+		
+		@NotBlank(message = "El estado es obligatorio")
+		@Size(max = 20, message = "El estado no puede exceder 20 caracteres")
+		String estado
+	) {}

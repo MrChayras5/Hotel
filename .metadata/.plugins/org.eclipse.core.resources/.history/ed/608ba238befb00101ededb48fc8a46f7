@@ -1,0 +1,5 @@
+package com.huesped.service;
+
+public class HuespedService extends Common{
+
+}

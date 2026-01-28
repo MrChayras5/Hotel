@@ -1,0 +1,5 @@
+package com.reserva.configuration;
+
+public class SecurityConfig {
+
+}
