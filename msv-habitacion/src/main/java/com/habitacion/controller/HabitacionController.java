@@ -10,7 +10,6 @@ import com.reservas_commons.dto.HabitacionResponse;
 
 
 @RestController
-@RequestMapping("/api/habitacion")
 public class HabitacionController extends CommonsController<HabitacionRequest, HabitacionResponse, HabitacionService>{
 
 	public HabitacionController(HabitacionService service) {

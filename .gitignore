@@ -1,0 +1,14 @@
+# Eclipse/STS metadata
+.metadata/
+.plugins/
+.settings/
+.project
+.classpath
+bin/
+
+# Maven
+target/
+
+# Logs y temporales
+*.log
+.lock_info

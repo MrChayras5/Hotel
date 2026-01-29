@@ -1,5 +1,0 @@
-package com.habitacion.repository;
-
-public interface HabitacionRepository {
-
-}

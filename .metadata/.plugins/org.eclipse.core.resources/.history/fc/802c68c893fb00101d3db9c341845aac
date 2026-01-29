@@ -1,5 +1,0 @@
-package com.habitacion.enums;
-
-public enum EstadoHabitacion {
-    DISPONIBLE, OCUPADA, LIMPIEZA, MANTENIMIENTO [cite: 133, 213]
-}

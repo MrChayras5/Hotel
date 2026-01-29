@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
@@ -16,30 +17,34 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-		
-		http.csrf(csrf -> csrf.disable())
-			.cors(cors -> cors.configurationSource(request -> {
-				CorsConfiguration corsConfiguration = new CorsConfiguration();
-				corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-				corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-				corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-				corsConfiguration.setAllowCredentials(true);
-				return corsConfiguration;
-			})).authorizeExchange(exchange -> exchange.anyExchange().permitAll()	
-					
-					//.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-			    //		.pathMatchers(HttpMethod.GET, "/**").hasAnyRole("ADMIN", "USER")
-				//	.pathMatchers(HttpMethod.POST, "/**").hasAnyRole("ADMIN", "USER")
-				//	.pathMatchers(HttpMethod.PUT, "/**").hasAnyRole("ADMIN", "USER")
-				//	.pathMatchers(HttpMethod.PATCH, "/**").hasAnyRole("ADMIN", "USER")
-				//	.pathMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
-				//	.anyExchange().authenticated()
-					)
-					
-			.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
-				jwt.jwtAuthenticationConverter(reactiveJwtAuthenticationConverterAdapter())));
-		
-		return http.build();
+	    
+	    http.csrf(csrf -> csrf.disable())
+	        .cors(cors -> cors.configurationSource(request -> {
+	            CorsConfiguration corsConfiguration = new CorsConfiguration();
+	            corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+	            corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+	            corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+	            corsConfiguration.setAllowCredentials(true);
+	            return corsConfiguration;
+	        }))
+	        .authorizeExchange(exchange -> exchange
+	            // 1. Primero permitimos OPTIONS para el CORS
+	            .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+	            
+	            // 2. Reglas por métodos y roles (Específicas)
+	            .pathMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+	            .pathMatchers(HttpMethod.GET, "/**").hasAnyRole("ADMIN", "USER")
+	            .pathMatchers(HttpMethod.POST, "/**").hasAnyRole("ADMIN", "USER")
+	            .pathMatchers(HttpMethod.PUT, "/**").hasAnyRole("ADMIN", "USER")
+	            .pathMatchers(HttpMethod.PATCH, "/**").hasAnyRole("ADMIN", "USER")
+	            
+	            // 3. Al final, cualquier otra cosa requiere estar autenticado
+	            .anyExchange().authenticated()
+	        )
+	        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+	            jwt.jwtAuthenticationConverter(reactiveJwtAuthenticationConverterAdapter())));
+	    
+	    return http.build();
 	}
 	
 	@Bean

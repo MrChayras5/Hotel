@@ -1,5 +1,0 @@
-package com.habitacion.service;
-
-public interface HabitacionServiceImp {
-
-}

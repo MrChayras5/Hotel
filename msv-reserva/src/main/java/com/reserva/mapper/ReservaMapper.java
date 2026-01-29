@@ -32,7 +32,7 @@ public class ReservaMapper implements CommoMapper<ReservaRequest, ReservaRespons
 		
 		reserva.setFechaEntrada(request.fechaEntrada());
 		reserva.setFechaSalida(request.fechaSalida());
-		reserva.setNoches(request.noches());
+		//reserva.setNoches(request.);
 		reserva.setTotal(request.total());
 		reserva.getEstado();
 		
@@ -45,7 +45,7 @@ public class ReservaMapper implements CommoMapper<ReservaRequest, ReservaRespons
 		
 		entity.setFechaEntrada(request.fechaEntrada());
 		entity.setFechaSalida(request.fechaSalida());
-		entity.setNoches(request.noches());
+		//entity.setNoches(request.noches());
 		entity.setTotal(request.total());
 		entity.setEstado(request.estado());
 

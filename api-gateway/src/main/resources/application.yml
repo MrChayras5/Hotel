@@ -24,7 +24,7 @@ spring:
               predicates:
                 - Path=/api/habitacion/**
               filters:
-                - StripPrefix=1
+                - StripPrefix=2
 
             - id: msv-huesped
               uri: lb://msv-huesped
@@ -36,7 +36,7 @@ spring:
             - id: msv-reserva
               uri: lb://msv-reserva
               predicates:
-                - Path=/api/msv-reserva/**
+                - Path=/api/reserva/**
               filters:
                 - StripPrefix=2
 

@@ -45,8 +45,8 @@ public class Reserva {
     @NotBlank(message = "El estado de la reserva es requerido")
     @Size(max = 20, message = "El estado no puede superar los 20 caracteres")
     @Column(name = "ESTADO", nullable = false, length = 20)
-    @Enumerated(EnumType.STRING)
-    private EstadoReserva estado;
+    //@Enumerated(EnumType.STRING)
+    private String estado;
 
 
 }

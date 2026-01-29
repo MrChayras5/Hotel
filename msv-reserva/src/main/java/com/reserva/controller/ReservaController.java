@@ -9,7 +9,6 @@ import com.reservas_commons.dto.ReservaRequest;
 import com.reservas_commons.dto.ReservaResponse;
 
 @RestController
-@RequestMapping("/reserva")
 public class ReservaController extends CommonsController<ReservaRequest, ReservaResponse, ReservaService>{
 
 	public ReservaController(ReservaService service) {

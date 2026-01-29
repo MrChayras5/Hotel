@@ -1,9 +1,0 @@
-package com.habitacion.service;
-
-import com.reservas_commons.dto.HabitacionRequest;
-import com.reservas_commons.dto.HabitacionResponse;
-import com.reservas_commons.service.CrudService;
-
-public interface HabitacionServiceImp {
-
-}

@@ -1,9 +1,0 @@
-package com.reservas_commons.dto;
-
-public record HuespedRequest(
-	    String nombre,
-	    String apellido,
-	    String email,
-	    String telefono,
-	    String documento 
-	) {}
