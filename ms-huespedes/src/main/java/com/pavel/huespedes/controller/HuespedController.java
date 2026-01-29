@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-// @RequestMapping("/huespedes")  <--- BORRA O COMENTA ESTA LÍNEA
-@RequestMapping("/") // <--- CAMBIALO POR ESTO (Raíz)
-//@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/") // 
 public class HuespedController {
 
     @Autowired

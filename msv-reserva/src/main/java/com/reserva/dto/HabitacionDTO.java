@@ -1,4 +1,4 @@
-package com.reserva.dto; // <--- CORREGIDO
+package com.reserva.dto; 
 
 public class HabitacionDTO {
     private Long id;

@@ -1,4 +1,4 @@
-package com.reserva.entity; // <--- CORREGIDO
+package com.reserva.entity; 
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "RESERVA")
 public class Reserva {
-    // ... (El resto del código de la entidad estaba bien, solo cambia el package)
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_RESERVA")
@@ -37,7 +37,7 @@ public class Reserva {
     @Column(name = "ID_USUARIO")
     private Long idUsuario;
 
-    // Getters y Setters...
+   
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public LocalDate getFechaEntrada() { return fechaEntrada; }

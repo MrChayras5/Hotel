@@ -1,6 +1,5 @@
-package com.reserva.repository; // <--- CORREGIDO
-
-import com.reserva.entity.Reserva; // <--- CORREGIDO
+package com.reserva.repository; 
+import com.reserva.entity.Reserva; 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

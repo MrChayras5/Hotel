@@ -1,6 +1,6 @@
-package com.reserva.client; // <--- CORREGIDO (sin pavel)
+package com.reserva.client; 
 
-import com.reserva.dto.HabitacionDTO; // <--- CORREGIDO
+import com.reserva.dto.HabitacionDTO; 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

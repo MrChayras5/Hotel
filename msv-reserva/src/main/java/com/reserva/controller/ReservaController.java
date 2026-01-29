@@ -1,7 +1,7 @@
-package com.reserva.controller; // <--- CORREGIDO
+package com.reserva.controller; 
 
-import com.reserva.entity.Reserva; // <--- CORREGIDO
-import com.reserva.service.ReservaService; // <--- CORREGIDO
+import com.reserva.entity.Reserva;
+import com.reserva.service.ReservaService; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
