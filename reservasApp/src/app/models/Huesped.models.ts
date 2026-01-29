@@ -7,6 +7,7 @@ export interface HuespedRequest{
  telefono: string,
  documento: string;
  nacionalidad: string;
+ 
 
 }
 
@@ -17,6 +18,7 @@ export interface HuespedResponse{
  email: string,
  telefono: string,
  documento: string,
- nacionalidad: string;
+ nacionalidad: string,
+ activo: number;
 
 }

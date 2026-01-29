@@ -16,11 +16,11 @@ declare var bootstrap: any;
 })
 export class HuespedesComponent implements OnInit, AfterViewInit {
   modalText: string = 'Registrar Huesped';
-
-  // Opciones para el Select
   listaDocumentos: string[] = ['INE', 'PASAPORTE', 'LICENCIA'];
-
+  
   listaHuespedes: HuespedResponse[] = [];
+  listaHuespedesFiltrada: HuespedResponse[] = [];
+  
   isEditMode: boolean = false;
   selectedHuesped: HuespedResponse | null = null;
   showActions: boolean = false;
@@ -31,16 +31,13 @@ export class HuespedesComponent implements OnInit, AfterViewInit {
 
   constructor(private fb: FormBuilder, private huespedesService: HuespedesService, private authService: AuthService) {
     this.huespedForm = this.fb.group({
-      id: [null],
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Solo 10 dígitos
-      
-      // ✅ LÓGICA NUEVA: Dos campos separados para formar el documento
+      // ✅ Requisito: Teléfono de 10 dígitos [cite: 125]
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], 
       tipoDocumento: ['INE', [Validators.required]], 
       numeroDocumento: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(10), Validators.pattern(/^[0-9]*$/)]], 
-      
       nacionalidad: ['Mexicana', [Validators.required]]
     });
   }
@@ -61,15 +58,101 @@ export class HuespedesComponent implements OnInit, AfterViewInit {
 
   listarHuespedes(): void {
     this.huespedesService.getHuespedes().subscribe({
-      next: resp => this.listaHuespedes = resp,
+      next: resp => {
+        this.listaHuespedes = resp;
+        this.listaHuespedesFiltrada = resp; // Muestra todos al inicio
+      },
       error: err => console.error('Error al cargar huespedes', err)
     });
   }
 
-  toggleForm(): void {
-    this.resetForm();
-    this.modalText = 'Registrar Huesped';
-    this.modalInstance.show();
+  // ✅ Método de búsqueda por nombre, documento o email [cite: 93]
+  onSearch(event: any): void {
+    const term = event.target.value.toLowerCase();
+    
+    if (!term) {
+      this.listaHuespedesFiltrada = this.listaHuespedes;
+      return;
+    }
+
+    this.listaHuespedesFiltrada = this.listaHuespedes.filter(h => 
+      h.nombre.toLowerCase().includes(term) ||
+      h.apellido.toLowerCase().includes(term) ||
+      h.email.toLowerCase().includes(term) ||
+      h.documento.toLowerCase().includes(term)
+    );
+  }
+
+  getFilaClass(activo: number): string {
+    return activo === 0 ? 'fila-inactiva' : '';
+  }
+
+  onSubmit(): void {
+    if (this.huespedForm.invalid) {
+      this.huespedForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.huespedForm.value;
+    const documentoFinal = formValues.tipoDocumento + formValues.numeroDocumento;
+
+    const huespedData: HuespedRequest = {
+      nombre: formValues.nombre,
+      apellido: formValues.apellido,
+      email: formValues.email,
+      telefono: formValues.telefono,
+      documento: documentoFinal,
+      nacionalidad: formValues.nacionalidad
+    };
+
+    if (this.isEditMode && this.selectedHuesped) {
+      this.huespedesService.putHuesped(huespedData, this.selectedHuesped.id).subscribe({
+        next: updated => {
+          const index = this.listaHuespedes.findIndex(h => h.id == this.selectedHuesped?.id);
+          if (index !== -1) this.listaHuespedes[index] = updated;
+          this.listaHuespedesFiltrada = [...this.listaHuespedes];
+          Swal.fire('Actualizado', 'Huesped actualizado correctamente', 'success');
+          this.modalInstance.hide();
+        },
+        error: (err) => Swal.fire('Error', 'No se pudo actualizar.', 'error')
+      });
+    } else {
+      this.huespedesService.postHuesped(huespedData).subscribe({
+        next: (registro) => {
+          this.listaHuespedes.push(registro);
+          this.listaHuespedesFiltrada = [...this.listaHuespedes];
+          Swal.fire('Registrado', 'Huesped registrado correctamente', 'success');
+          this.modalInstance.hide();
+        },
+        error: (err) => Swal.fire('Error', 'Verifica datos duplicados.', 'error')
+      });
+    }
+  }
+
+  deleteHuesped(idHuesped: number): void {
+    Swal.fire({
+      title: '¿Desactivar huésped?',
+      text: 'El registro se marcará como inactivo.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, desactivar',
+      cancelButtonColor: '#d33'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.huespedesService.deleteHuesped(idHuesped).subscribe({
+          next: () => {
+            // Actualización para borrado lógico (se mantiene en lista pero cambia estado)
+            const index = this.listaHuespedes.findIndex(h => h.id === idHuesped);
+            if (index !== -1) {
+              this.listaHuespedes[index].activo = 0;
+              this.listaHuespedesFiltrada = [...this.listaHuespedes];
+            }
+            Swal.fire('Desactivado', 'Huésped inactivo.', 'success');
+          },
+          error: () => Swal.fire('Error', 'No se pudo desactivar.', 'error')
+        });
+      }
+    });
   }
 
   editHuesped(huesped: HuespedResponse): void {
@@ -77,119 +160,40 @@ export class HuespedesComponent implements OnInit, AfterViewInit {
     this.selectedHuesped = huesped;
     this.modalText = 'Editando Huesped: ' + huesped.nombre;
 
-    // 🧠 LÓGICA DE EDICIÓN: Separar "INE12345" en "INE" y "12345"
-    let tipo = 'INE'; // Valor por defecto
+    let tipo = 'INE';
     let numero = huesped.documento;
 
-    // Buscamos si el documento empieza con alguna palabra de nuestra lista
     for (const docType of this.listaDocumentos) {
       if (huesped.documento.startsWith(docType)) {
         tipo = docType;
-        numero = huesped.documento.substring(docType.length); // Cortamos el prefijo
+        numero = huesped.documento.substring(docType.length);
         break; 
       }
     }
 
     this.huespedForm.patchValue({
-      id: huesped.id,
       nombre: huesped.nombre,
       apellido: huesped.apellido,
       email: huesped.email,
       telefono: huesped.telefono,
       nacionalidad: huesped.nacionalidad,
-      // Asignamos los valores separados
       tipoDocumento: tipo,
       numeroDocumento: numero
     });
-
     this.modalInstance.show();
   }
 
   resetForm(): void {
     this.isEditMode = false;
     this.selectedHuesped = null;
-    this.huespedForm.reset();
-    // Valores por defecto al abrir modal limpio
-    this.huespedForm.patchValue({
+    this.huespedForm.reset({
       tipoDocumento: 'INE',
       nacionalidad: 'Mexicana'
     });
   }
 
-  onSubmit(): void {
-    // 1. Validamos formulario visualmente
-    if (this.huespedForm.invalid) {
-      this.huespedForm.markAllAsTouched();
-      return;
-    }
-
-    const formValues = this.huespedForm.value;
-
-    // ✅ 2. LÓGICA DE UNIÓN: Juntamos Tipo + Número para enviar al Backend
-    // Ejemplo: "INE" + "998877" = "INE998877"
-    const documentoFinal = formValues.tipoDocumento + formValues.numeroDocumento;
-
-    // 3. Creamos el objeto limpio para enviar
-    const huespedData: HuespedRequest = {
-      nombre: formValues.nombre,
-      apellido: formValues.apellido,
-      email: formValues.email,
-      telefono: formValues.telefono,
-      documento: documentoFinal, // <--- Aquí va el unido
-      nacionalidad: formValues.nacionalidad
-    };
-
-    if (this.isEditMode && this.selectedHuesped) {
-      // --- EDITAR ---
-      const id = this.selectedHuesped.id;
-      this.huespedesService.putHuesped(huespedData, id).subscribe({
-        next: updated => {
-          const index = this.listaHuespedes.findIndex(h => h.id == id);
-          if (index !== -1) this.listaHuespedes[index] = updated;
-          
-          Swal.fire('Actualizado', 'Huesped actualizado correctamente', 'success');
-          this.modalInstance.hide();
-        },
-        error: (err) => {
-          console.error(err);
-          Swal.fire('Error', 'No se pudo actualizar. Verifica duplicados en Email o Documento.', 'error');
-        }
-      });
-
-    } else {
-      // --- REGISTRAR ---
-      this.huespedesService.postHuesped(huespedData).subscribe({
-        next: (registro) => {
-          this.listaHuespedes.push(registro);
-          Swal.fire('Registrado', 'Huesped registrado correctamente', 'success');
-          this.modalInstance.hide();
-        },
-        error: (err) => {
-          console.error(err);
-          Swal.fire('Error de Registro', 'No se pudo guardar. Verifica que el <b>EMAIL</b>, <b>TELÉFONO</b> o <b>DOCUMENTO</b> no estén ya registrados.', 'error');
-        }
-      });
-    }
-  }
-
-  deleteHuesped(idHuesped: number): void {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'El huesped será eliminado permanentemente.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.huespedesService.deleteHuesped(idHuesped).subscribe({
-          next: () => {
-            this.listaHuespedes = this.listaHuespedes.filter(h => h.id !== idHuesped);
-            Swal.fire('Eliminado', 'Huesped eliminado correctamente', 'success');
-          },
-          error: (err) => Swal.fire('Error', 'No se pudo eliminar al huesped.', 'error')
-        });
-      }
-    });
+  toggleForm(): void {
+    this.resetForm();
+    this.modalInstance.show();
   }
 }

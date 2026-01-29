@@ -1,10 +1,13 @@
-
-    <div class="container-fluid mt-4">
+<div class="container-fluid mt-4">
     <h2>Huespedes</h2>
     <div class="d-flex justify-content-between mb-3">
-        <button (click)="toggleForm()" class="btn btn-success"><i class="fa fa-plus"></i>
-            Registrar Huesped
+        <button (click)="toggleForm()" class="btn btn-success">
+            <i class="fa fa-plus"></i> Registrar Huesped
         </button>
+
+        <div class="w-25">
+            <input type="text" class="form-control" placeholder="Buscar huésped..." (input)="onSearch($event)">
+        </div>
     </div>
 
     <table class="table table-striped table-bordered mt-3">
@@ -16,29 +19,27 @@
                 <th scope="col">Email</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Documento</th>
-                <th scope="col">Nacionalidad</th> 
+                <th scope="col">Nacionalidad</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-          <tr style="text-align: center;" *ngFor="let huesped of listaHuespedes; let i = index">
-            <td>{{ i + 1}}</td>
-            <td>{{ huesped.nombre}}</td>
-            <td>{{ huesped.apellido}}</td>
-            <td>{{ huesped.email}}</td>
-            <td>{{ huesped.telefono}}</td>
-            <td>{{ huesped.documento}}</td>     
-            <td>{{ huesped.nacionalidad }}</td>     
-            <td>
-                <button *ngIf="showActions" class="btn btn-primary btn-sm me-1 ms-1" (click)="editHuesped(huesped)">Editar</button>
-                <button *ngIf="showActions" class="btn btn-danger btn-sm ms-1"  (click)="deleteHuesped(huesped.id)">Eliminar</button> 
-            </td>
-          </tr>
+            <tr style="text-align: center;" *ngFor="let huesped of listaHuespedesFiltrada; let i = index">
+                <td>{{ i + 1}}</td>
+                <td>{{ huesped.nombre}}</td>
+                <td>{{ huesped.apellido}}</td>
+                <td>{{ huesped.email}}</td>
+                <td>{{ huesped.telefono}}</td>
+                <td>{{ huesped.documento}}</td>
+                <td>{{ huesped.nacionalidad }}</td>
+                <td>
+                    <button *ngIf="showActions" class="btn btn-primary btn-sm me-1 ms-1" (click)="editHuesped(huesped)">Editar</button>
+                    <button *ngIf="showActions" class="btn btn-danger btn-sm ms-1" (click)="deleteHuesped(huesped.id)">Eliminar</button>
+                </td>
+            </tr>
         </tbody>
-     </table>
-     
+    </table>
 
- <!-- Modal -->
     <div class="modal fade" #huespedModalRef tabindex="-1" aria-labelledby="categoriaModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -47,7 +48,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                     <form [formGroup]="huespedForm" (ngSubmit)="onSubmit()">
+                    <form [formGroup]="huespedForm" (ngSubmit)="onSubmit()">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input id="nombre" class="form-control" formControlName="nombre" maxlength="50" />
@@ -64,32 +65,23 @@
                             <label for="telefono" class="form-label">Telefono</label>
                             <input id="telefono" class="form-control" formControlName="telefono" maxlength="10" />
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Documento de Identidad</label>
-                            
                             <div class="input-group">
-                                <select class="form-select" formControlName="tipoDocumento" style="max-width: 140px; background-color: #f8f9fa;">
+                                <select class="form-select" formControlName="tipoDocumento" style="max-width: 140px">
                                     <option *ngFor="let doc of listaDocumentos" [value]="doc">{{ doc }}</option>
                                 </select>
-
-                                <input type="text" class="form-control" formControlName="numeroDocumento" maxlength ="10" 
-                                    placeholder="Número (Ej: 12345678)"
-                                    [class.is-invalid]="huespedForm.get('numeroDocumento')?.invalid && huespedForm.get('numeroDocumento')?.touched">
+                                <input type="text" class="form-control" formControlName="numeroDocumento" maxlength="10" placeholder="Número (Ej: 12345678)" [class.is-invalid]="huespedForm.get('numeroDocumento')?.invalid && huespedForm.get('numeroDocumento')?.touched">
                             </div>
-
-                            <div *ngIf="huespedForm.get('numeroDocumento')?.hasError('minlength') && huespedForm.get('numeroDocumento')?.touched" 
-                                class="text-danger small mt-1">
+                            <div *ngIf="huespedForm.get('numeroDocumento')?.hasError('minlength') && huespedForm.get('numeroDocumento')?.touched" class="text-danger small mt-1">
                                 El número debe tener al menos 10 dígitos.
                             </div>
-
-                            <div *ngIf="huespedForm.get('numeroDocumento')?.hasError('pattern') && huespedForm.get('numeroDocumento')?.touched" 
-                                class="text-danger small mt-1">
+                            <div *ngIf="huespedForm.get('numeroDocumento')?.hasError('pattern') && huespedForm.get('numeroDocumento')?.touched" class="text-danger small mt-1">
                                 Solo se permiten números.
                             </div>
                         </div>
 
-                        
                         <div class="mb-3">
                             <label for="nacionalidad" class="form-label">Nacionalidad</label>
                             <input type="text" id="nacionalidad" class="form-control" formControlName="nacionalidad">
@@ -99,11 +91,9 @@
                                 Guardar
                             </button>
                         </div>
-                    </form> 
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
- 
