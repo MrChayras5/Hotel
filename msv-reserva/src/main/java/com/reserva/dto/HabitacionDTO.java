@@ -1,11 +1,10 @@
-package com.reserva.dto;
+package com.reserva.dto; // <--- CORREGIDO
 
 public class HabitacionDTO {
     private Long id;
     private Double precio;
     private String estado;
 
-    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Double getPrecio() { return precio; }

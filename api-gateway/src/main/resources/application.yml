@@ -1,3 +1,6 @@
+server:
+  port: 8090 # Puerto estándar para Gateway
+
 spring:
   application:
     name: api-gateway
@@ -13,37 +16,31 @@ spring:
       enabled: true
 
     gateway:
-      server:
-        webflux:
-          routes:
-            - id: msv-pacientes
-              uri: lb://msv-pacientes
-              predicates:
-                - Path=/api/pacientes/**
-              filters:
-                - StripPrefix=2
+      routes:
+        - id: msv-habitaciones
+          uri: lb://msv-habitacion
+          predicates:
+            - Path=/api/habitaciones/**
+          filters:
+            - StripPrefix=2
 
-            - id: msv.medico
-              uri: lb://msv.medico
-              predicates:
-                - Path=/api/medicos/**
-              filters:
-                - StripPrefix=2
+        - id: msv-huespedes
+          uri: lb://msv-huespedes
+          predicates:
+            - Path=/api/huespedes/**
+          filters:
+            - StripPrefix=2
 
-            - id: msv.citas
-              uri: lb://msv.citas
-              predicates:
-                - Path=/api/citas/**
-              filters:
-                - StripPrefix=2
-
-server:
-  port: 8090
+        - id: msv-reserva
+          uri: lb://msv-reserva
+          predicates:
+            - Path=/api/reservas/**
+          filters:
+            - StripPrefix=2
 
 eureka:
   instance:
-     instance-id: ${spring.application.name}:${random.value}
-
+    instance-id: ${spring.application.name}:${random.value}
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
