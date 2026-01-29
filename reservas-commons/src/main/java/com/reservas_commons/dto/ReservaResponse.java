@@ -1,0 +1,19 @@
+package com.reservas_commons.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public record ReservaResponse(
+		Long idReserva,
+		LocalDate fechaEntrada,
+		LocalDate fechaSalida,
+		Integer noches,
+		BigDecimal total,
+		String estado
+		) {
+
+}
+
+
+
+//Lo ultimo fue arreglar los dto
