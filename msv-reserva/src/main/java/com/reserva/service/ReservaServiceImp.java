@@ -9,6 +9,8 @@ import com.reserva.mapper.ReservaMapper;
 import com.reserva.repository.ReservaRepository;
 import com.reservas_commons.dto.ReservaRequest;
 import com.reservas_commons.dto.ReservaResponse;
+import com.reservas_commons.enums.EstadoReserva;
+
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -28,9 +30,12 @@ public class ReservaServiceImp implements ReservaService{
 	 @Override
 	    @Transactional(readOnly = true)
 	    public List<ReservaResponse> listar() {
-	        return reservaRepository.findAll().stream()
-	                .map(reservaMapper::entityToResponce)
-	                .toList();
+	        
+		 return reservaRepository
+		            .findByEstadoNot(EstadoReserva.CANCELADA)
+		            .stream()
+		            .map(reservaMapper::entityToResponce)
+		            .toList();
 	    }
 
 	    @Override
@@ -53,7 +58,8 @@ public class ReservaServiceImp implements ReservaService{
 	        int noches = (int) java.time.temporal.ChronoUnit.DAYS.between(request.fechaEntrada(), request.fechaSalida());
 	        Reserva reserva = reservaMapper.requestToEntity(request);
 	        reserva.setNoches(noches);
-	        reserva.setEstado("Confirmada"); // Estado inicial [cite: 180, 260]
+	        reserva.setEstado(EstadoReserva.CONFIRMADA);///-------------------
+
 
 	        return reservaMapper.entityToResponce(reservaRepository.save(reserva));
 	    }
@@ -65,28 +71,32 @@ public class ReservaServiceImp implements ReservaService{
 	                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
 
 	        // Validar que solo se modifique si está Confirmada [cite: 262]
-	        if (!reservaExistente.getEstado().equals("Confirmada")) {
-	            throw new RuntimeException("Solo se pueden modificar reservas en estado Confirmada");
+	        if (reservaExistente.getEstado() != EstadoReserva.CONFIRMADA) {
+	            throw new RuntimeException(
+	                "Solo se pueden modificar reservas en estado CONFIRMADA"
+	            );
 	        }
-
-	        // Actualizar datos y recalcular...
-	        // reservaExistente.setFechaEntrada(request.fechaEntrada());
-	        // ... lógica de recalculo de total [cite: 74, 78]
-
 	        return reservaMapper.entityToResponce(reservaRepository.save(reservaExistente));
 	    }
 
 	    @Override
 	    @Transactional
 	    public void eliminar(Long id) {
-	        // En lugar de eliminar físicamente, el sistema sugiere Cancelar [cite: 77, 185]
+
 	        Reserva reserva = reservaRepository.findById(id)
 	                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
-	        
-	        if (reserva.getEstado().equals("En curso")) {
-	            throw new RuntimeException("No se puede eliminar/cancelar una reserva en curso");
+
+	        if (reserva.getEstado() == EstadoReserva.EN_CURSO ||
+	            reserva.getEstado() == EstadoReserva.FINALIZADA) {
+	            throw new RuntimeException(
+	                "No se puede cancelar una reserva en curso o finalizada"
+	            );
 	        }
-	        
-	        reservaRepository.delete(reserva);
+
+	        reserva.setEstado(EstadoReserva.CANCELADA);
+
+	        reservaRepository.save(reserva);
 	    }
+	    
+	   
 }

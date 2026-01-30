@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.reserva.entity.Reserva;
 import com.reservas_commons.dto.ReservaRequest;
 import com.reservas_commons.dto.ReservaResponse;
+import com.reservas_commons.enums.EstadoReserva;
 import com.reservas_commons.mappers.CommoMapper;
 
 @Component
@@ -20,24 +21,26 @@ public class ReservaMapper implements CommoMapper<ReservaRequest, ReservaRespons
 				entity.getFechaSalida(),
 				entity.getNoches(),
 				entity.getTotal(),
-				entity.getEstado()
+				entity.getEstado().name()
 				);
 	}
 
 	@Override
 	public Reserva requestToEntity(ReservaRequest request) {
-		if(request==null) return null;
-		
-		Reserva reserva = new Reserva();
-		
-		reserva.setFechaEntrada(request.fechaEntrada());
-		reserva.setFechaSalida(request.fechaSalida());
-		//reserva.setNoches(request.);
-		reserva.setTotal(request.total());
-		reserva.getEstado();
-		
-		return reserva;
+	    if (request == null) return null;
+
+	    Reserva reserva = new Reserva();
+	    reserva.setFechaEntrada(request.fechaEntrada());
+	    reserva.setFechaSalida(request.fechaSalida());
+	    reserva.setNoches(request.noches());
+	    reserva.setTotal(request.total());
+	    reserva.setIdHuesped(request.idHuesped());
+	    reserva.setIdHabitacion(request.idHabitacion());
+;
+
+	    return reserva;
 	}
+
 
 	@Override
 	public Reserva updateEntityFromRequest(ReservaRequest request, Reserva entity) {
@@ -45,9 +48,8 @@ public class ReservaMapper implements CommoMapper<ReservaRequest, ReservaRespons
 		
 		entity.setFechaEntrada(request.fechaEntrada());
 		entity.setFechaSalida(request.fechaSalida());
-		//entity.setNoches(request.noches());
 		entity.setTotal(request.total());
-		entity.setEstado(request.estado());
+		entity.setEstado(EstadoReserva.valueOf(request.estado()));
 
 		return entity;
 	}

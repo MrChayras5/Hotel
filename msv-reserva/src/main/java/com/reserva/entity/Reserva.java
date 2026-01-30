@@ -42,11 +42,15 @@ public class Reserva {
     @Column(name = "TOTAL", nullable = false, precision = 10, scale = 2)
     private BigDecimal total;
 
-    @NotBlank(message = "El estado de la reserva es requerido")
-    @Size(max = 20, message = "El estado no puede superar los 20 caracteres")
-    @Column(name = "ESTADO", nullable = false, length = 20)
-    //@Enumerated(EnumType.STRING)
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO", nullable = false, length = 40)
+    private EstadoReserva estado;
+    
 
+    @Column(name = "ID_HUESPED", nullable = false)
+    private Long idHuesped;
+
+    @Column(name = "ID_HABITACION", nullable = false)
+    private Long idHabitacion;
 
 }
