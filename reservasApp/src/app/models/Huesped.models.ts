@@ -19,6 +19,6 @@ export interface HuespedResponse{
  telefono: string,
  documento: string,
  nacionalidad: string,
- activo: number;
+ activo: boolean;
 
 }

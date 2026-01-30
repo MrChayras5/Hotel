@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <table class="table table-striped table-bordered mt-3">
+    <table class="table table-bordered mt-3">
         <thead class="table-dark">
             <tr style="text-align: center;">
                 <th scope="col">#</th>
@@ -23,8 +23,13 @@
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
+
+
         <tbody>
-            <tr style="text-align: center;" *ngFor="let huesped of listaHuespedesFiltrada; let i = index">
+        <ng-container *ngFor="let huesped of listaHuespedesFiltrada; let i = index">
+            <tr style="text-align: center;"
+                [ngClass]="{'fila-eliminada': !huesped.activo}">
+
                 <td>{{ i + 1}}</td>
                 <td>{{ huesped.nombre}}</td>
                 <td>{{ huesped.apellido}}</td>
@@ -32,12 +37,26 @@
                 <td>{{ huesped.telefono}}</td>
                 <td>{{ huesped.documento}}</td>
                 <td>{{ huesped.nacionalidad }}</td>
+            
                 <td>
-                    <button *ngIf="showActions" class="btn btn-primary btn-sm me-1 ms-1" (click)="editHuesped(huesped)">Editar</button>
-                    <button *ngIf="showActions" class="btn btn-danger btn-sm ms-1" (click)="deleteHuesped(huesped.id)">Eliminar</button>
+                    <ng-container *ngIf="huesped.activo; else eliminado">
+                        <button *ngIf="showActions" class="btn btn-primary btn-sm me-1 ms-1"
+                                (click)="editHuesped(huesped)">Editar</button>
+
+                        <button *ngIf="showActions" class="btn btn-danger btn-sm ms-1"
+                                (click)="deleteHuesped(huesped.id)">Eliminar</button>
+                    </ng-container>
+
+                    <ng-template #eliminado>
+                        <span class="badge bg-danger">Eliminado</span>
+                    </ng-template>
                 </td>
+
             </tr>
-        </tbody>
+        </ng-container>
+    </tbody>
+
+
     </table>
 
     <div class="modal fade" #huespedModalRef tabindex="-1" aria-labelledby="categoriaModalLabel" aria-hidden="true">

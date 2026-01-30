@@ -42,6 +42,10 @@ putHuesped(huesped: HuespedRequest, huespedId: number): Observable<HuespedRespon
     );
   }
 
+  //Profe
+
+  /*
+  
   deleteHuesped(huespedId: number): Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${huespedId}`).pipe(
       catchError(error => {
@@ -49,7 +53,20 @@ putHuesped(huesped: HuespedRequest, huespedId: number): Observable<HuespedRespon
         throw error;
       })
     );
-  }
+  } */
 
+
+  deleteHuesped(huespedId: number): Observable<HuespedResponse>{
+  return this.http.put<HuespedResponse>(`${this.apiUrl}/desactivar/${huespedId}`, {}).pipe(
+    catchError(error => {
+      console.error('Error al desactivar huesped: ', error);
+      throw error;
+    })
+  );
+}
+
+
+
+  
 
 }
