@@ -7,5 +7,6 @@ import com.habitacion.entity.Habitacion;
 
 @Repository
 public interface HabitacionRepository extends JpaRepository<Habitacion, Long>{
-
+	boolean existsByNumero(Integer numero);
+	
 }

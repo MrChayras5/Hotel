@@ -1,7 +1,6 @@
 package com.habitacion.entity;
 
 import java.math.BigDecimal;
-
 import com.habitacion.enums.EstadoHabitacion;
 
 import jakarta.persistence.Column;
@@ -19,7 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "HABITACION")
+@Table(name = "HABITACIONES")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter 
@@ -32,7 +31,7 @@ public class Habitacion {
     @Column(name = "ID_HABITACION", nullable = false)
     private Long idHabitacion;
 
-    @Column(name = "NUMERO", nullable = false)
+    @Column(name = "NUMERO", unique = true, nullable = false)
     private Integer numero;
 
     @Column(name = "TIPO", nullable = false, length = 20)
@@ -48,5 +47,6 @@ public class Habitacion {
     private Integer capacidad;
 
     @Column(name = "ESTADO", nullable = false, length = 20)
-    private String estado;
+    @Enumerated(EnumType.STRING) // <--- ESTA LÍNEA ES LA QUE FALTA
+    private EstadoHabitacion estado;
 }

@@ -6,10 +6,8 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.reservas_commons.enums.EstadoReserva;
-
 @Entity
-@Table(name = "RESERVA")
+@Table(name = "RESERVAS")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

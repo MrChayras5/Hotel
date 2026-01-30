@@ -1,6 +1,5 @@
 package com.habitacion.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.habitacion.service.HabitacionService;

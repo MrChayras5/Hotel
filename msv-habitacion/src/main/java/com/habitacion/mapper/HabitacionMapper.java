@@ -3,6 +3,7 @@ package com.habitacion.mapper;
 import org.springframework.stereotype.Component;
 
 import com.habitacion.entity.Habitacion;
+import com.habitacion.enums.EstadoHabitacion;
 import com.reservas_commons.dto.HabitacionRequest;
 import com.reservas_commons.dto.HabitacionResponse;
 import com.reservas_commons.mappers.CommoMapper;
@@ -21,7 +22,7 @@ public class HabitacionMapper implements CommoMapper<HabitacionRequest, Habitaci
 				entity.getDescripcion(),
 				entity.getPrecio(),
 				entity.getCapacidad(),
-				entity.getEstado()
+				entity.getEstado().name()
 				);
 	}
 
@@ -36,7 +37,8 @@ public class HabitacionMapper implements CommoMapper<HabitacionRequest, Habitaci
 		habitacion.setDescripcion(request.descripcion());
 		habitacion.setPrecio(request.precio());
 		habitacion.setCapacidad(request.capacidad());
-		habitacion.setEstado(request.estado());
+		// En HabitacionMapper.java
+		habitacion.setEstado(EstadoHabitacion.DISPONIBLE);
 		
 		return habitacion;
 		
@@ -50,7 +52,7 @@ public class HabitacionMapper implements CommoMapper<HabitacionRequest, Habitaci
 		entity.setDescripcion(request.descripcion());
 		entity.setPrecio(request.precio());
 		entity.setCapacidad(request.capacidad());
-		entity.setEstado(request.estado());
+		//entity.setEstado(EstadoHabitacion.fromCodigo(request.estado()));
 		
 		return entity;
 	}

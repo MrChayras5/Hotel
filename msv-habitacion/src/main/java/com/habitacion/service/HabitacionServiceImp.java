@@ -42,8 +42,14 @@ public class HabitacionServiceImp implements HabitacionService{
 
     @Override
     public HabitacionResponse registrar(HabitacionRequest request) {
+    	// 1. Validar si el número ya existe antes de registrar
+        if (habitacionRepository.existsByNumero(request.numero())) {
+            throw new RuntimeException("Error: La habitación número " + request.numero() + " ya está registrada.");
+        }
+    	
         Habitacion habitacion = habitacionMapper.requestToEntity(request);
         Habitacion guardada = habitacionRepository.save(habitacion);
+        
         return habitacionMapper.entityToResponce(guardada);
     }
 
@@ -52,16 +58,10 @@ public class HabitacionServiceImp implements HabitacionService{
         Habitacion habitacionExistente = habitacionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No se puede actualizar, ID no existe: " + id));
         
-        // Actualizamos los campos manualmente o podrías usar un mapper de actualización
-        habitacionExistente.setNumero(request.numero());
-        habitacionExistente.setTipo(request.tipo());
-        habitacionExistente.setDescripcion(request.descripcion());
-        habitacionExistente.setPrecio(request.precio());
-        //habitacionExistente.setPrecio(java.math.BigDecimal.valueOf(request.precio()));
-        habitacionExistente.setCapacidad(request.capacidad());
-        habitacionExistente.setEstado(request.estado());
+        Habitacion habitacion = habitacionRepository.save(habitacionMapper.updateEntityFromRequest(request, habitacionExistente));
 
-        return habitacionMapper.entityToResponce(habitacionRepository.save(habitacionExistente));
+
+        return habitacionMapper.entityToResponce(habitacion);
     }
 
     @Override
