@@ -2,7 +2,7 @@
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    padding-bottom: 50px;/* You can add global styles to this file, and also import other style files */
+    padding-bottom: 50px;
 }
 
 main{

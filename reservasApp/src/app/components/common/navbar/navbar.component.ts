@@ -16,10 +16,11 @@ export class NavbarComponent implements OnInit{
 
   constructor(private authService: AuthService){}
 
-ngOnInit(): void{
+ngOnInit(): void {
   this.username = this.authService.getUsername();
+  
   if(this.authService.hasRole(Roles.ADMIN)){
-    this.showMenuAdmin = this.showMenuAdmin;
+    this.showMenuAdmin = true; // <--- CORRECCIÓN
   }
 }
 

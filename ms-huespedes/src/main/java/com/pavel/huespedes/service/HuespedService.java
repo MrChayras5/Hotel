@@ -25,7 +25,7 @@ public class HuespedService {
 
     @Transactional
     public Huesped actualizar(Huesped huesped, Long id) {
-        // Validación simple para asegurar que existe
+        
         return repository.findById(id).map(h -> {
             h.setNombre(huesped.getNombre());
             h.setApellido(huesped.getApellido());
@@ -41,4 +41,15 @@ public class HuespedService {
     public void eliminar(Long id) {
         repository.deleteById(id);
     }
+    
+    @Transactional
+    public Huesped desactivar(Long id) {
+        Huesped h = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("No encontrado"));
+
+        h.setActivo(false);
+        return repository.save(h);
+    }
+
+
 }

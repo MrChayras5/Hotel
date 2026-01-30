@@ -17,7 +17,6 @@ declare var bootstrap: any;
 export class HuespedesComponent implements OnInit, AfterViewInit {
   modalText: string = 'Registrar Huesped';
 
-  // Opciones para el Select
   listaDocumentos: string[] = ['INE', 'PASAPORTE', 'LICENCIA'];
 
   listaHuespedes: HuespedResponse[] = [];
@@ -37,7 +36,6 @@ export class HuespedesComponent implements OnInit, AfterViewInit {
       email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Solo 10 dígitos
       
-      // ✅ LÓGICA NUEVA: Dos campos separados para formar el documento
       tipoDocumento: ['INE', [Validators.required]], 
       numeroDocumento: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(10), Validators.pattern(/^[0-9]*$/)]], 
       
@@ -47,24 +45,19 @@ export class HuespedesComponent implements OnInit, AfterViewInit {
 
   //MIOPOOOOO
 
-  
-
-  // 1. Agrega esta propiedad para manejar la lista que se muestra en la tabla
 listaHuespedesFiltrada: HuespedResponse[] = [];
 
 //Pavel
-// 2. Modifica tu método listarHuespedes para inicializar ambas listas
 listarHuespedes(): void {
   this.huespedesService.getHuespedes().subscribe({
     next: resp => {
       this.listaHuespedes = resp;
-      this.listaHuespedesFiltrada = resp; // Inicialmente son iguales
+      this.listaHuespedesFiltrada = resp; 
     },
     error: err => console.error('Error al cargar huespedes', err)
   });
 } 
 
-// 3. Agrega el método de búsqueda
 onSearch(event: any): void {
   const term = event.target.value.toLowerCase();
   
@@ -115,15 +108,15 @@ onSearch(event: any): void {
     this.selectedHuesped = huesped;
     this.modalText = 'Editando Huesped: ' + huesped.nombre;
 
-    // 🧠 LÓGICA DE EDICIÓN: Separar "INE12345" en "INE" y "12345"
-    let tipo = 'INE'; // Valor por defecto
+    
+    let tipo = 'INE'; 
     let numero = huesped.documento;
 
-    // Buscamos si el documento empieza con alguna palabra de nuestra lista
+    
     for (const docType of this.listaDocumentos) {
       if (huesped.documento.startsWith(docType)) {
         tipo = docType;
-        numero = huesped.documento.substring(docType.length); // Cortamos el prefijo
+        numero = huesped.documento.substring(docType.length);
         break; 
       }
     }
@@ -135,7 +128,6 @@ onSearch(event: any): void {
       email: huesped.email,
       telefono: huesped.telefono,
       nacionalidad: huesped.nacionalidad,
-      // Asignamos los valores separados
       tipoDocumento: tipo,
       numeroDocumento: numero
     });
@@ -147,7 +139,6 @@ onSearch(event: any): void {
     this.isEditMode = false;
     this.selectedHuesped = null;
     this.huespedForm.reset();
-    // Valores por defecto al abrir modal limpio
     this.huespedForm.patchValue({
       tipoDocumento: 'INE',
       nacionalidad: 'Mexicana'
@@ -155,7 +146,6 @@ onSearch(event: any): void {
   }
 
   onSubmit(): void {
-    // 1. Validamos formulario visualmente
     if (this.huespedForm.invalid) {
       this.huespedForm.markAllAsTouched();
       return;
@@ -163,11 +153,8 @@ onSearch(event: any): void {
 
     const formValues = this.huespedForm.value;
 
-    // ✅ 2. LÓGICA DE UNIÓN: Juntamos Tipo + Número para enviar al Backend
-    // Ejemplo: "INE" + "998877" = "INE998877"
     const documentoFinal = formValues.tipoDocumento + formValues.numeroDocumento;
 
-    // 3. Creamos el objeto limpio para enviar
     const huespedData: HuespedRequest = {
       nombre: formValues.nombre,
       apellido: formValues.apellido,
@@ -178,7 +165,6 @@ onSearch(event: any): void {
     };
 
     if (this.isEditMode && this.selectedHuesped) {
-      // --- EDITAR ---
       const id = this.selectedHuesped.id;
       this.huespedesService.putHuesped(huespedData, id).subscribe({
         next: updated => {
@@ -195,7 +181,6 @@ onSearch(event: any): void {
       });
 
     } else {
-      // --- REGISTRAR ---
       this.huespedesService.postHuesped(huespedData).subscribe({
         next: (registro) => {
           this.listaHuespedes.push(registro);

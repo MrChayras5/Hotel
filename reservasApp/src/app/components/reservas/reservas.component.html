@@ -1,0 +1,102 @@
+<div class="container-fluid mt-4">
+    <h2>Gestión de Reservas</h2>
+    <div class="mb-3">
+        <button class="btn btn-success" (click)="abrirModal()">
+            <i class="fa fa-plus"></i> Nueva Reserva
+        </button>
+    </div>
+
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>#</th>
+                <th>Huésped</th>
+                <th>Habitación</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Noches</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-center align-middle">
+            <tr *ngFor="let res of listaReservas">
+                <td>{{ res.id }}</td>
+                <td>{{ res.nombreHuesped || res.idHuesped }}</td>
+                <td>{{ res.numeroHabitacion || res.idHabitacion }}</td>
+                <td>{{ res.fechaEntrada | date:'dd/MM/yyyy' }}</td>
+                <td>{{ res.fechaSalida | date:'dd/MM/yyyy' }}</td>
+                <td>{{ res.noches }}</td>
+                <td>{{ res.total | currency }}</td>
+                <td>
+                    <span [ngClass]="{
+                        'badge bg-success': res.estado === 'CONFIRMADA',
+                        'badge bg-danger': res.estado === 'CANCELADA',
+                        'badge bg-primary': res.estado === 'EN_CURSO'
+                    }">{{ res.estado }}</span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-primary me-2" (click)="editar(res)" [disabled]="res.estado === 'CANCELADA'">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="cancelarReserva(res.id!)" 
+                            [disabled]="res.estado === 'CANCELADA' || res.estado === 'FINALIZADA'">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" #modalRef tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">{{ modalTitulo }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="reservaForm" (ngSubmit)="guardar()">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Huésped</label>
+                        <select class="form-select" formControlName="idHuesped">
+                            <option value="" disabled>Seleccione un huésped</option>
+                            <option *ngFor="let h of listaHuespedes" [value]="h.id">
+                                {{ h.nombre }} {{ h.apellido }} ({{ h.documento }})
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Habitación</label>
+                        <select class="form-select" formControlName="idHabitacion">
+                            <option value="" disabled>Seleccione una habitación</option>
+                            <option *ngFor="let hab of listaHabitaciones" [value]="hab.id">
+                                Hab: {{ hab.numero }} - {{ hab.tipo }} (${{ hab.precio }})
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Entrada</label>
+                            <input type="date" class="form-control" formControlName="fechaEntrada">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Salida</label>
+                            <input type="date" class="form-control" formControlName="fechaSalida">
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success" [disabled]="reservaForm.invalid">Guardar Reserva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

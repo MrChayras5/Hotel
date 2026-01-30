@@ -30,4 +30,8 @@ public class Huesped {
 
     @Column(name = "NACIONALIDAD", nullable = false, length = 50)
     private String nacionalidad;
+    
+    @Column(name = "activo")
+    private Boolean activo = true;
+
 }

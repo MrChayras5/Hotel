@@ -1,9 +1,9 @@
-package com.reserva.service; // <--- CORREGIDO
+package com.reserva.service; 
 
-import com.reserva.client.HabitacionClient; // <--- CORREGIDO
-import com.reserva.dto.HabitacionDTO;       // <--- CORREGIDO
-import com.reserva.entity.Reserva;          // <--- CORREGIDO
-import com.reserva.repository.ReservaRepository; // <--- CORREGIDO
+import com.reserva.client.HabitacionClient;
+import com.reserva.dto.HabitacionDTO;      
+import com.reserva.entity.Reserva;        
+import com.reserva.repository.ReservaRepository; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,20 +29,16 @@ public class ReservaService {
             throw new RuntimeException("La fecha de salida debe ser posterior a la entrada");
         }
 
-
-
-        //Quitar comentario
-        //HabitacionDTO habitacion = habitacionClient.obtenerHabitacion(reserva.getIdHabitacion());
-
+        
         long noches = ChronoUnit.DAYS.between(reserva.getFechaEntrada(), reserva.getFechaSalida());
         reserva.setNoches((int) noches);
 
+        
         double precioPorNoche = 100.00;
         double totalCalculado = noches * precioPorNoche;
-
-        //Quitar comentario
-        //double totalCalculado = noches * habitacion.getPrecio();
-        //reserva.setTotal(BigDecimal.valueOf(totalCalculado));
+        
+ 
+        reserva.setTotal(BigDecimal.valueOf(totalCalculado)); 
         reserva.setEstado("CONFIRMADA");
 
         return repository.save(reserva);
@@ -52,17 +48,16 @@ public class ReservaService {
         return repository.findById(id).orElse(null);
     }
 
-    // Modificación para ELIMINADO LÓGICO (Cancelar reserva)
+   
     public void eliminarReserva(Long id) {
         Reserva reserva = repository.findById(id).orElse(null);
 
         if (reserva != null) {
-            // Validar que no se cancele una reserva que ya pasó o está en curso
+            
             if ("EN_CURSO".equals(reserva.getEstado()) || "FINALIZADA".equals(reserva.getEstado())) {
                 throw new RuntimeException("No se puede cancelar una reserva en curso o finalizada");
             }
 
-            // En lugar de borrar, cambiamos el estado
             reserva.setEstado("CANCELADA");
             repository.save(reserva);
         }

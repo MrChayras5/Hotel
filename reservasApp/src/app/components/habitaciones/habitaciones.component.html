@@ -1,10 +1,103 @@
-
-    <div class="container-fluid mt-4">
-    <h2>Habitaciones</h2>
-    <div class="d-flex justify-content-between mb-3">
-        <button  class="btn btn-success"><i class="fa fa-plus"></i>
-            Registrar Habitacion
+<div class="container-fluid mt-4">
+    <h2>Gestión de Habitaciones</h2>
+    
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+        <button class="btn btn-success" (click)="abrirModal()">
+            <i class="fa fa-plus"></i> Registrar Habitación
         </button>
+        <div class="w-25">
+            <input type="text" class="form-control" placeholder="Buscar por número o tipo..." (input)="onSearch($event)">
+        </div>
     </div>
-       </div>
-   
+
+    <table class="table table-striped table-bordered mt-3 shadow-sm">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Número</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Capacidad</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-center align-middle">
+            <tr *ngFor="let hab of listaFiltrada">
+                <td class="fw-bold">{{ hab.numero }}</td>
+                <td>{{ hab.tipo }}</td>
+                <td>{{ hab.descripcion || 'N/A' }}</td>
+                <td>{{ hab.precio | currency }}</td>
+                <td>{{ hab.capacidad }} pers.</td>
+                <td>
+                    <span [class]="getBadgeClass(hab.estado)">{{ hab.estado }}</span>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-sm me-2" (click)="editar(hab)">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm" 
+                            [ngClass]="hab.estado === 'MANTENIMIENTO' ? 'btn-info' : 'btn-danger'"
+                            (click)="cambiarEstado(hab.id, hab.estado)"
+                            title="Cambiar estado">
+                        <i class="fa" [ngClass]="hab.estado === 'MANTENIMIENTO' ? 'fa-check' : 'fa-ban'"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" #modalRef tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">{{ modalTitulo }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="habitacionForm" (ngSubmit)="guardar()">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Número de Habitación</label>
+                        <input type="number" class="form-control" formControlName="numero" 
+                               [class.is-invalid]="habitacionForm.get('numero')?.invalid && habitacionForm.get('numero')?.touched">
+                        <div class="invalid-feedback">El número es obligatorio y positivo.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tipo</label>
+                        <select class="form-select" formControlName="tipo">
+                            <option *ngFor="let t of tiposHabitacion" [value]="t">{{ t }}</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio x Noche</label>
+                            <input type="number" class="form-control" formControlName="precio" 
+                                   [class.is-invalid]="habitacionForm.get('precio')?.invalid && habitacionForm.get('precio')?.touched">
+                            <div class="invalid-feedback">Requerido (> 0).</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Capacidad</label>
+                            <input type="number" class="form-control" formControlName="capacidad" 
+                                   [class.is-invalid]="habitacionForm.get('capacidad')?.invalid && habitacionForm.get('capacidad')?.touched">
+                            <div class="invalid-feedback">Requerido (> 0).</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" formControlName="descripcion" rows="3"></textarea>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success" [disabled]="habitacionForm.invalid">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

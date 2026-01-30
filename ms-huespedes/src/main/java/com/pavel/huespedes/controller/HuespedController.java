@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/") // 
+@RequestMapping("/") 
 public class HuespedController {
 
     @Autowired
     private HuespedService service;
     
-    // Ahora, cuando el Gateway mande "/", caerá aquí
     @GetMapping
     public List<Huesped> listar() {
         return service.listar();
@@ -36,4 +35,12 @@ public class HuespedController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @PutMapping("/desactivar/{id}")
+    public ResponseEntity<Huesped> desactivar(@PathVariable Long id) {
+        Huesped h = service.desactivar(id);
+        return ResponseEntity.ok(h);
+    }
+
+
 }

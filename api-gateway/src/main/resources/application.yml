@@ -18,7 +18,7 @@ spring:
     gateway:
       routes:
         - id: msv-habitaciones
-          uri: lb://msv-habitacion
+          uri: lb://msv-habitaciones
           predicates:
             - Path=/api/habitaciones/**
           filters:
@@ -31,10 +31,10 @@ spring:
           filters:
             - StripPrefix=2
 
-        - id: msv-reserva
-          uri: lb://msv-reserva
+        - id: msv-reservaciones
+          uri: lb://msv-reservaciones
           predicates:
-            - Path=/api/reservas/**
+            - Path=/api/reservaciones/**
           filters:
             - StripPrefix=2
 

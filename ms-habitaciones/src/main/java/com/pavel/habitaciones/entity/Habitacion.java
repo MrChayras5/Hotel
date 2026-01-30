@@ -33,5 +33,5 @@ public class Habitacion {
     private Integer capacidad;
 
     @NotNull
-    private String estado; // DISPONIBLE, OCUPADA, LIMPIEZA, MANTENIMIENTO
+    private String estado; 
 }

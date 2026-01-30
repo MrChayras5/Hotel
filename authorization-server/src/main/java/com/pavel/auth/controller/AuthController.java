@@ -3,6 +3,7 @@ package com.pavel.auth.controller;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,24 +20,42 @@ import com.pavel.auth.services.UsuarioService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 
 @RestController
 @AllArgsConstructor
+
+
 public class AuthController {
 
 	private final AuthService authService;
 
 	private final UsuarioService usuarioService;
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/admin/usuarios")
+	public ResponseEntity<Set<UsuarioResponse>> listarUsuarios() {
+	    return ResponseEntity.ok(usuarioService.listar());
+	}
+	
+	
+
+	
 
 	@PostMapping("/api/login")
 	public ResponseEntity<TokenResponse> generarToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 		return ResponseEntity.ok(authService.autenticar(loginRequest));
 	}
+	
+	
+	/*
 
 	@GetMapping("/admin/usuarios")
 	public ResponseEntity<Set<UsuarioResponse>> listarUsuarios() {
 		return ResponseEntity.ok(usuarioService.listar());
 	}
+	*/
 
 	@PostMapping("/admin/usuarios")
 	public ResponseEntity<UsuarioResponse> registrarUsuarios(@Valid @RequestBody UsuarioRequest request) {
@@ -47,5 +66,6 @@ public class AuthController {
 	public ResponseEntity<UsuarioResponse> eliminarUsuario(@PathVariable String username) {
 		return ResponseEntity.ok(usuarioService.eliminar(username));
 	}
-
+	
+	
 }

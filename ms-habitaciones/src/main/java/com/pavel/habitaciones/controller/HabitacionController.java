@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/habitaciones")
+@RequestMapping("/")
 public class HabitacionController {
 
     @Autowired
@@ -41,4 +41,13 @@ public class HabitacionController {
         Habitacion actualizada = service.actualizar(id, habitacion);
         return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
     }
+    
+	 @PatchMapping("/{id}/estado")
+	 public ResponseEntity<Habitacion> cambiarEstado(@PathVariable Long id, @RequestBody String nuevoEstado) {
+	    
+	     String estadoLimpio = nuevoEstado.replace("\"", ""); 
+	     Habitacion actualizada = service.actualizarEstado(id, estadoLimpio);
+	     return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
+	 }
+    
 }
